@@ -20,3 +20,10 @@ Clone the project on your rpi home. Then you can run it either manually:
 Or put an entry in cron (using `crontab -e`):
 
 `@reboot /home/pi/cooler_control/run.sh`
+
+
+## Connect to the Server:
+
+A flask server will show you the cooler status as bellow:
+
+![](static/screen.png)
