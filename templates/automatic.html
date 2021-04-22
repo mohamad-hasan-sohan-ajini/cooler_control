@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+<html>
+    <div class="infoDiv">
+            <h1>
+                <img class="myImage" src="{{ url_for('static', filename='info.png') }}" alt="information image">
+                <br>
+                Information
+            </h1>
+            <br>
+            Temperature: {{ smoothed_temperature }}
+            <br>
+            Mode: {{ control_mode }}
+            <br>
+        </div>
+        <br>
+
+    <div>
+        <form action="/" method="post">
+            <input type="hidden" name="mode" value="automatic">
+            Min Threshold: <input type="text" name="min_threshold" placeholder={{ min_threshold }}><br>
+            Max Threshold: <input type="text" name="max_threshold" placeholder={{ max_threshold }}><br>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+<html>
+    <div class="infoDiv">
+        <h1>
+            <img class="myImage" src="{{ url_for('static', filename='info.png') }}" alt="information image">
+            <br>
+            Information
+        </h1>
+        <br>
+        Temperature: {{ smoothed_temperature }}
+        <br>
+        Mode: {{ control_mode }}
+        <br>
+    </div>
+    <br>
+
+
+    <div {% if control_mode == "automatic" %} class="activeDiv" {% else %} class="inactiveDiv" {% endif %}>
+        <h1>
+            <img class="myImage" src="{{ url_for('static', filename='automatic.png') }}" alt="automatic image">
+            <br>
+            Automatic Control
+        </h1>
+        <br>
+        Min: {{ min_threshold }}
+        <br>
+        Max: {{ max_threshold }}
+        <br>
+        <br>
+        <input type="button" value="Set Threshold" onclick="location.href='automatic.html'">
+    </div>
+    <br>
+
+
+    <div {% if control_mode == "timer" %} class="activeDiv" {% else %} class="inactiveDiv" {% endif %}>
+        <h1>
+            <img class="myImage" src="{{ url_for('static', filename='timer.png') }}" alt="timer image">
+            <br>
+            Timer Control
+        </h1>
+        <br>
+        Work In Progress
+        <br>
+    </div>
+    <br>
+
+
+    <div {% if control_mode == "manual" %} class="activeDiv" {% else %} class="inactiveDiv" {% endif %}>
+        <h1>
+            <img class="myImage" src="{{ url_for('static', filename='manual.png') }}" alt="manual image">
+            <br>
+            Manual Control
+        </h1>
+        <br>
+        <table style="width: 30em text-align: middle">
+            <tr>
+                <th>Item</th>
+                <th>Active</th>
+            </tr>
+            <tr>
+                <td>Pump</td>
+                <td>{{ pump }}</td>
+            </tr>
+            <tr>
+                <td>Slow</td>
+                <td>{{ slow }}</td>
+            </tr>
+            <tr>
+                    <td>Speed</td>
+                    <td>{{ speed }}</td>
+                </tr>
+        </table>
+        <br>
+        <input type="button" value="Set Manually" onclick="location.href='manual.html'">
+    </div>
+    <br>
+</html>
