@@ -25,8 +25,7 @@ class Cooler():
         self.control_mode = 'automatic'
         self.min_threshold =  26.6
         self.max_threshold = 27.5
-        self.smoothed_temperature = -1.
-        self.update_temperature()
+        self.smoothed_temperature = get_temperature()
 
     def set_pump(self, status):
         self.pump = status
@@ -59,11 +58,10 @@ class Cooler():
             print('set speed: {}'.format(status))
 
     def update_temperature(self):
-        t = get_temperature()
-        if self.smoothed_temperature < 0:
-            self.smoothed_temperature = t
-        else:
-            self.smoothed_temperature = .7 * self.smoothed_temperature + .3 * t
+        self.smoothed_temperature = (
+            .7 * self.smoothed_temperature
+            + .3 * get_temperature()
+        )
         self.smoothed_temperature = round(self.smoothed_temperature, 2)
 
     def update(self):
