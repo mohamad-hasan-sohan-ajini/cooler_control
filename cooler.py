@@ -72,7 +72,6 @@ class Cooler():
             if self.smoothed_temperature < self.min_threshold:
                 self.set_pump(False)
                 self.set_slow(False)
-                self.set_speed(False)
             # high threshold
             if self.smoothed_temperature > self.max_threshold:
                 self.set_pump(True)
