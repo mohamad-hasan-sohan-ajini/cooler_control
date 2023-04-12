@@ -1,10 +1,11 @@
+from datetime import datetime
 import time
 
 import smbus
 
 bus = smbus.SMBus(1)
 address = 0x77
-
+BASE_PATH = '/home/pi/'
 
 def read_byte(adr):
     return bus.read_byte_data(address, adr)
@@ -57,7 +58,11 @@ def get_temperature():
     write_byte(0xF4, 0x2E)
     time.sleep(temp_wait_period)
     temp_raw = read_word_2c(0xF6)
-    return calculate()
+    temperature = calculate()
+    file_path = BASE_PATH + datetime.today().strftime('%Y-%m-%d') + '.txt'
+    with open(file_path, 'a') as f:
+        f.write(f'{datetime.now()} {temperature:.3f}\n')
+    return temperature
 
 
 calibration = bus.read_i2c_block_data(address, 0xAA, 22)
