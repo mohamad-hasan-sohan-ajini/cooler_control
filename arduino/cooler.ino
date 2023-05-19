@@ -6,7 +6,7 @@
 #define LCD_COLS 16
 #define LCD_ROWS 2
 #define ANALOGPIN A0
-#define TEMPMASIZE 100
+#define TEMPMASIZE 220
 #define MAXMODEPIN 10
 #define MINMODEPIN 11
 #define INCREASETEMPPIN 9
@@ -18,7 +18,6 @@
 #define IDLEMILLIS 5000
 #define DEBOUNCEMILLIS 300
 #define TEMPSTEP .1
-#define EMPTYSTRING "                "
 
 
 // GLOBALS
@@ -62,6 +61,10 @@ void setup() {
   pinMode(DECREASETEMPPIN, INPUT);
   digitalWrite(DECREASETEMPPIN, HIGH);
 
+  // setting pump and morot pins
+  pinMode(PUMPPIN, OUTPUT);
+  pinMode(MOTORPIN, OUTPUT);
+
   // recover constants
   // write_thresholds();
   read_thresholds();
@@ -82,14 +85,16 @@ void loop() {
   // Otherwise control cooler automatically
   if (cooler_state) {
     if (temp < min_temperature) {
-      digitalWrite(PUMPPIN, HIGH);
       digitalWrite(MOTORPIN, HIGH);
+      delay(10);
+      digitalWrite(PUMPPIN, HIGH);
       cooler_state = false;
     }
   }
   else {
     if (temp > max_temperature) {
       digitalWrite(PUMPPIN, LOW);
+      delay(10);
       digitalWrite(MOTORPIN, LOW);
       cooler_state = true;
     }
@@ -145,13 +150,6 @@ void update_manifests() {
   manifest_line2 = "min" + String(min_temperature, 1) + "  max" + String(max_temperature, 1);
 }
 
-void clear_lcd() {
-  lcd.setCursor(0, 0);
-  lcd.print(EMPTYSTRING);
-  lcd.setCursor(0, 1);
-  lcd.print(EMPTYSTRING);
-}
-
 void read_thresholds() {
   EEPROM.get(MINTEMPADDR, min_temperature);
   EEPROM.get(MAXTEMPADDR, max_temperature);
@@ -179,7 +177,7 @@ void set_thresholds() {
   float temp_button = 0;
   String last_mode = mode;
   Serial.println("@set threshold");
-  clear_lcd();
+  lcd.clear();
   while(millis() - entrance_time < IDLEMILLIS) {
     // update manifest
     manifest_line1 = " max: " + String(max_temperature, 1) + " C";
@@ -224,6 +222,6 @@ void set_thresholds() {
     }
   }
   write_thresholds();
-  clear_lcd();
+  lcd.clear();
   mode = "auto";
 }
