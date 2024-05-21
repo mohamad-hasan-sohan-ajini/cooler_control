@@ -11,8 +11,8 @@
 #define MINMODEPIN 11
 #define INCREASETEMPPIN 9
 #define DECREASETEMPPIN 12
-#define MINTEMPADDR 1016
-#define MAXTEMPADDR 1020
+#define MINTEMPADDR 1016  // 1016-1020
+#define MAXTEMPADDR 1020  // 1020-1024
 #define PUMPPIN 8
 #define MOTORPIN 7
 #define IDLEMILLIS 5000
@@ -35,7 +35,7 @@ bool cooler_state = false;
 
 void setup() {
   // serial
-  Serial.begin(2000000);
+  Serial.begin(115200);
   Serial.println("Init...");
 
   // lcd
@@ -68,6 +68,18 @@ void setup() {
   // recover constants
   // write_thresholds();
   read_thresholds();
+
+  // initialize variables
+  if (temp > max_temperature) {
+    cooler_state = true;
+    digitalWrite(MOTORPIN, LOW);
+    delay(10);
+    digitalWrite(PUMPPIN, LOW);
+  }
+  else {
+    digitalWrite(MOTORPIN, HIGH);
+    digitalWrite(PUMPPIN, HIGH);
+  }
 }
 
 void loop() {
