@@ -1,4 +1,4 @@
-import time
+import json
 
 import RPi.GPIO as GPIO
 
@@ -8,7 +8,7 @@ GPIO.setmode(GPIO.BCM)
 
 
 class Cooler:
-    def __init__(self, pump_pin, slow_pin, speed_pin, inverse_logic=False):
+    def __init__(self, pump_pin, slow_pin, speed_pin, inverse_logic, config_file):
         super(Cooler, self).__init__()
         self.pump = False
         self.pump_pin = pump_pin
@@ -17,6 +17,11 @@ class Cooler:
         self.speed = False
         self.speed_pin = speed_pin
         self.inverse_logic = inverse_logic
+        self.config_file = config_file
+        with open(config_file) as f:
+            config = json.load(f)
+        self.min_threshold = config.get("min_threshold", 26.6)
+        self.max_threshold = config.get("max_threshold", 27.5)
         GPIO.setup(pump_pin, GPIO.OUT)
         GPIO.output(pump_pin, GPIO.LOW)
         GPIO.setup(slow_pin, GPIO.OUT)
@@ -24,8 +29,6 @@ class Cooler:
         GPIO.setup(speed_pin, GPIO.OUT)
         GPIO.output(speed_pin, GPIO.LOW)
         self.control_mode = "automatic"
-        self.min_threshold = 26.6
-        self.max_threshold = 27.5
         self.smoothed_temperature = get_temperature()
 
     def set_pump(self, status):

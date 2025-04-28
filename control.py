@@ -1,10 +1,20 @@
+import json
+
 from flask import Flask, redirect, url_for, render_template, request
 
 from cooler import Cooler
 
 # globals
 app = Flask(__name__)
-cooler = Cooler(21, 20, 16, inverse_logic=True)
+config_file = "config.json"
+inverse_logic = True
+cooler = Cooler(
+    pump_pin=21,
+    slow_pin=20,
+    speed_pin=16,
+    inverse_logic=inverse_logic,
+    config_file=config_file,
+)
 
 
 @app.route("/", methods=("GET", "POST"))
@@ -19,10 +29,20 @@ def index():
             # TODO: check rationality if thresholds
             try:
                 cooler.min_threshold = float(request.form["min_threshold"])
+                with open(config_file) as f:
+                    config = json.load(f)
+                config["min_threshold"] = cooler.min_threshold
+                with open(config_file, "w") as f:
+                    json.dump(config, f)
             except Exception as E:
                 pass
             try:
                 cooler.max_threshold = float(request.form["max_threshold"])
+                with open(config_file) as f:
+                    config = json.load(f)
+                config["max_threshold"] = cooler.max_threshold
+                with open(config_file, "w") as f:
+                    json.dump(config, f)
             except Exception as E:
                 pass
             cooler.set_speed(False)
