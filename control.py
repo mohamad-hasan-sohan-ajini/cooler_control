@@ -4,8 +4,7 @@ from cooler import Cooler
 
 # globals
 app = Flask(__name__)
-cooler = Cooler(21, 20, 16)
-inverse_logic = True
+cooler = Cooler(21, 20, 16, inverse_logic=True)
 
 
 @app.route("/", methods=("GET", "POST"))
@@ -26,22 +25,22 @@ def index():
                 cooler.max_threshold = float(request.form["max_threshold"])
             except Exception as E:
                 pass
-            cooler.set_speed(False ^ inverse_logic)
+            cooler.set_speed(False)
             return redirect("/update")
 
         if request.form["mode"] == "manual":
             if "Pump" in request.form:
-                cooler.set_pump(True ^ inverse_logic)
+                cooler.set_pump(True)
             else:
-                cooler.set_pump(False ^ inverse_logic)
+                cooler.set_pump(False)
             if "Slow" in request.form:
-                cooler.set_slow(True ^ inverse_logic)
+                cooler.set_slow(True)
             else:
-                cooler.set_slow(False ^ inverse_logic)
+                cooler.set_slow(False)
             if "Speed" in request.form:
-                cooler.set_speed(True ^ inverse_logic)
+                cooler.set_speed(True)
             else:
-                cooler.set_speed(False ^ inverse_logic)
+                cooler.set_speed(False)
             return redirect("/update")
 
         return "not implemented!"

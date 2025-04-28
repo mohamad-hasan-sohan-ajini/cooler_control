@@ -8,7 +8,7 @@ GPIO.setmode(GPIO.BCM)
 
 
 class Cooler:
-    def __init__(self, pump_pin, slow_pin, speed_pin):
+    def __init__(self, pump_pin, slow_pin, speed_pin, inverse_logic=False):
         super(Cooler, self).__init__()
         self.pump = False
         self.pump_pin = pump_pin
@@ -16,6 +16,7 @@ class Cooler:
         self.slow_pin = slow_pin
         self.speed = False
         self.speed_pin = speed_pin
+        self.inverse_logic = inverse_logic
         GPIO.setup(pump_pin, GPIO.OUT)
         GPIO.output(pump_pin, GPIO.LOW)
         GPIO.setup(slow_pin, GPIO.OUT)
@@ -30,7 +31,7 @@ class Cooler:
     def set_pump(self, status):
         self.pump = status
         try:
-            if status:
+            if self.inverse_logic ^ status:
                 GPIO.output(self.pump_pin, GPIO.HIGH)
             else:
                 GPIO.output(self.pump_pin, GPIO.LOW)
@@ -40,7 +41,7 @@ class Cooler:
     def set_slow(self, status):
         self.slow = status
         try:
-            if status:
+            if self.inverse_logic ^ status:
                 GPIO.output(self.slow_pin, GPIO.HIGH)
             else:
                 GPIO.output(self.slow_pin, GPIO.LOW)
@@ -50,7 +51,7 @@ class Cooler:
     def set_speed(self, status):
         self.speed = status
         try:
-            if status:
+            if self.inverse_logic ^ status:
                 GPIO.output(self.speed_pin, GPIO.HIGH)
             else:
                 GPIO.output(self.speed_pin, GPIO.LOW)
