@@ -7,7 +7,7 @@ from temp import get_temperature
 GPIO.setmode(GPIO.BCM)
 
 
-class Cooler():
+class Cooler:
     def __init__(self, pump_pin, slow_pin, speed_pin):
         super(Cooler, self).__init__()
         self.pump = False
@@ -22,8 +22,8 @@ class Cooler():
         GPIO.output(slow_pin, GPIO.LOW)
         GPIO.setup(speed_pin, GPIO.OUT)
         GPIO.output(speed_pin, GPIO.LOW)
-        self.control_mode = 'automatic'
-        self.min_threshold =  26.6
+        self.control_mode = "automatic"
+        self.min_threshold = 26.6
         self.max_threshold = 27.5
         self.smoothed_temperature = get_temperature()
 
@@ -35,7 +35,7 @@ class Cooler():
             else:
                 GPIO.output(self.pump_pin, GPIO.LOW)
         except Exception as E:
-            print('set pump: {}'.format(status))
+            print("set pump: {}".format(status))
 
     def set_slow(self, status):
         self.slow = status
@@ -45,7 +45,7 @@ class Cooler():
             else:
                 GPIO.output(self.slow_pin, GPIO.LOW)
         except Exception as E:
-            print('set slow: {}'.format(status))
+            print("set slow: {}".format(status))
 
     def set_speed(self, status):
         self.speed = status
@@ -55,19 +55,18 @@ class Cooler():
             else:
                 GPIO.output(self.speed_pin, GPIO.LOW)
         except Exception as E:
-            print('set speed: {}'.format(status))
+            print("set speed: {}".format(status))
 
     def update_temperature(self):
         self.smoothed_temperature = (
-            .7 * self.smoothed_temperature
-            + .3 * get_temperature()
+            0.7 * self.smoothed_temperature + 0.3 * get_temperature()
         )
         self.smoothed_temperature = round(self.smoothed_temperature, 2)
 
     def update(self):
         self.update_temperature()
         # automatic
-        if self.control_mode == 'automatic':
+        if self.control_mode == "automatic":
             # low threshold
             if self.smoothed_temperature < self.min_threshold:
                 self.set_pump(False)

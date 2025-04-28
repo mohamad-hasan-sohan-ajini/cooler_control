@@ -7,60 +7,60 @@ app = Flask(__name__)
 cooler = Cooler(21, 20, 16)
 
 
-@app.route('/', methods=('GET', 'POST'))
+@app.route("/", methods=("GET", "POST"))
 def index():
-    if request.method == 'GET':
-        return render_template('index.html', **cooler.__dict__)
+    if request.method == "GET":
+        return render_template("index.html", **cooler.__dict__)
 
-    if request.method == 'POST':
-        cooler.control_mode = request.form['mode']
+    if request.method == "POST":
+        cooler.control_mode = request.form["mode"]
 
-        if request.form['mode'] == 'automatic':
+        if request.form["mode"] == "automatic":
             # TODO: check rationality if thresholds
             try:
-                cooler.min_threshold = float(request.form['min_threshold'])
+                cooler.min_threshold = float(request.form["min_threshold"])
             except Exception as E:
                 pass
             try:
-                cooler.max_threshold = float(request.form['max_threshold'])
+                cooler.max_threshold = float(request.form["max_threshold"])
             except Exception as E:
                 pass
             cooler.set_speed(False)
-            return redirect('/update')
+            return redirect("/update")
 
-        if request.form['mode'] == 'manual':
-            if 'Pump' in request.form:
+        if request.form["mode"] == "manual":
+            if "Pump" in request.form:
                 cooler.set_pump(True)
             else:
                 cooler.set_pump(False)
-            if 'Slow' in request.form:
+            if "Slow" in request.form:
                 cooler.set_slow(True)
             else:
                 cooler.set_slow(False)
-            if 'Speed' in request.form:
+            if "Speed" in request.form:
                 cooler.set_speed(True)
             else:
                 cooler.set_speed(False)
-            return redirect('/update')
+            return redirect("/update")
 
-        return 'not implemented!'
+        return "not implemented!"
 
 
-@app.route('/automatic.html')
+@app.route("/automatic.html")
 def automatic():
-    return render_template('automatic.html', **cooler.__dict__)
+    return render_template("automatic.html", **cooler.__dict__)
 
 
-@app.route('/manual.html')
+@app.route("/manual.html")
 def manual():
-    return render_template('manual.html', **cooler.__dict__)
+    return render_template("manual.html", **cooler.__dict__)
 
 
-@app.route('/update')
+@app.route("/update")
 def update():
     cooler.update()
-    return redirect('/')
+    return redirect("/")
 
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=False, port=8000)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", debug=False, port=8000)
